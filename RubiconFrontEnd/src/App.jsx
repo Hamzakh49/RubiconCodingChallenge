@@ -1,14 +1,19 @@
-// import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
-import "./App.scss";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { NavigationBar } from "./pages/NavigationBar";
+import { Projects } from "./pages/Projects";
+import { Tasks } from "./pages/Tasks";
 
 function App() {
-  // const [count, setCount] = useState(0);
-
   return (
     <>
-      <div>Rubicon Coding Challenge</div>
+      <Router>
+        <Routes>
+          <Route element={<NavigationBar />}>
+            <Route path="/" element={<Projects />} />
+            <Route path="/tasks" element={<Tasks />} />
+          </Route>
+        </Routes>
+      </Router>
     </>
   );
 }

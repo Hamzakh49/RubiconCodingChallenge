@@ -1,0 +1,86 @@
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  margin-left: 10rem;
+  margin-right: 10rem;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  background-color: #f7f9fa;
+}
+body {
+  background-color: #f7f9fa;
+}
+.title {
+  color: $color1;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.active-tab {
+  background-color: $color1;
+  width: 8rem;
+  font-weight: 500;
+  text-align: center;
+  align-items: center;
+  &:hover {
+    background-color: $color1;
+  }
+}
+
+.inactive-tab {
+  width: 8rem;
+  background-color: white;
+  color: $color1;
+  font-weight: 500;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-style: none;
+  &:hover {
+    background-color: $color1;
+  }
+}
+
+.tasks-button {
+  margin-left: 1.25rem;
+}
+
+.new-display {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.table th {
+  background-color: #f7f9fa;
+  color: #a2a0a0;
+  border-style: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.table .created {
+  background-color: #75b7ff;
+  border-radius: 6px;
+  text-align: center;
+  color: #297be2;
+  font-size: 12px;
+  padding: 3px;
+}
+// td {
+// text-align: center;
+// height: 100%;
+// margin-top: 5px;
+// }
+.desc {
+  width: 35%;
+}
+.updated {
+  background-color: #ffd6ab;
+  border-radius: 6px;
+  text-align: center;
+  color: #cb963c;
+  font-size: 12px;
+  padding: 3px;
+}
