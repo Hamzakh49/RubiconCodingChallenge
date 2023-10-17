@@ -34,7 +34,7 @@ export const NavigationBar = () => {
       >
         Tasks
       </Button>
-      <Outlet />
+      <Outlet/>
     </>
   );
 };

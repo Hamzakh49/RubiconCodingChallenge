@@ -5,9 +5,37 @@ import { CiCalendar } from "react-icons/ci";
 import { MdModeEdit, MdDelete } from "react-icons/md";
 import { ModalComponent } from "../components/ModalComponent";
 import { Form, FormGroup, Label, Input } from "reactstrap";
+import { addProject } from "../api/projectsAPI";
 
 export const Projects = () => {
   const [showModal, setShowModal] = useState(false);
+  const [projectQuery, setProjectQuery] = useState({});
+  const [loading, setLoading] = useState(false)
+
+  const addProjectFunc = async () => {
+    setLoading(true)
+    try {
+      // const query = {};
+      const res = await addProject(projectQuery);
+       if(res.data.success){
+        setProjectQuery({})
+        setShowModal(false)
+        setLoading(true)
+       } 
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const changeQuery = (e) => {
+    setProjectQuery({
+      ...projectQuery,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // useEffect(() => {
+    console.log("projectQuery", projectQuery);
+  // }, [projectQuery]);
   return (
     <>
       <div className="new-display">
@@ -83,37 +111,46 @@ export const Projects = () => {
         header={"Add new project"}
         smallheader={"Fill your project attributes"}
         submit={"Save"}
+        onSubmit={addProjectFunc}
       >
         <Form>
           <FormGroup>
-            <Label>Label*</Label>
-            <Input placeholder="Write a label..."></Input>
+            <Label for="label">Label*</Label>
+            <Input
+              id="label"
+              name="label"
+              placeholder="Write a label..."
+              onChange={(e) => changeQuery(e)}
+            ></Input>
           </FormGroup>
           <FormGroup>
-            <Label for="exampleText">Description*</Label>
+            <Label for="description">Description*</Label>
             <Input
-              id="exampleText"
-              name="text"
+              id="description"
+              name="description"
               type="textarea"
               placeholder="Write a description..."
+              onChange={(e) => changeQuery(e)}
             />
           </FormGroup>
           <FormGroup>
-            <Label for="exampleDate">Started at*</Label>
+            <Label for="starting_date">Started at*</Label>
             <Input
-              id="exampleDate"
-              name="date"
-              placeholder="date placeholder"
+              id="starting_date"
+              name="starting_date"
+              // placeholder="date placeholder"
               type="date"
+              onChange={(e) => changeQuery(e)}
             />
           </FormGroup>
           <FormGroup>
-            <Label for="exampleDate">Ended at*</Label>
+            <Label for="ending_date">Ended at*</Label>
             <Input
-              id="exampleDate"
-              name="date"
+              id="ending_date"
+              name="ending_date"
               placeholder="date placeholder"
               type="date"
+              onChange={(e) => changeQuery(e)}
             />
           </FormGroup>
         </Form>
