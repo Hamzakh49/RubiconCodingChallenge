@@ -96,6 +96,7 @@ export const Projects = () => {
       setLoading(false);
     }
   };
+
   const getProjectFunc = async (id) => {
     try {
       setProjectID(id);
@@ -113,6 +114,7 @@ export const Projects = () => {
       console.log(err);
     }
   };
+
   const updateProjectFunc = async (id) => {
     setLoading(true);
     if (!verifyValues()) {
@@ -121,7 +123,7 @@ export const Projects = () => {
         if (res.data.success) {
           toast.success(res.data.message);
           setShowModalEdit(false);
-          handleUpdateElement({ newData: projectQuery, _id: id });
+          handleUpdateElement({ newData: res.data.data });
           setLoading(false);
         } else {
           toast.error(res.data.message);
@@ -209,11 +211,11 @@ export const Projects = () => {
               <td>{t?.description}</td>
               <td>
                 <CiCalendar className="mb-1" />
-                {t?.starting_date}
+                {moment(t?.starting_date).format("DD/MM/YYYY")}
               </td>
               <td>
                 <CiCalendar className="mb-1" />
-                {t?.ending_date}
+                {moment(t?.ending_date).format("DD/MM/YYYY")}
               </td>
               <td>
                 <div className="created">

@@ -117,11 +117,11 @@ export const Tasks = () => {
       if (res.data.success) {
         setShowModal(false);
         setTaskQuery({
-          label: res.data.data.label,
-          description: res.data.data.description,
-          starting_date: res.data.data.starting_date,
-          ending_date: res.data.data.ending_date,
-          project: res.data.data.project._id,
+          label: res.data?.data?.label,
+          description: res.data?.data?.description,
+          starting_date: res.data?.data?.starting_date,
+          ending_date: res.data?.data?.ending_date,
+          project: res.data?.data?.project?._id,
         });
       }
     } catch (err) {
@@ -138,8 +138,7 @@ export const Tasks = () => {
           toast.success(res.data.message);
           setShowModalEdit(false);
           handleUpdateElement({
-            newData: { ...taskQuery, project: res.data.data.project },
-            _id: id,
+            newData: res.data.data,
           });
           setLoading(false);
         } else {
@@ -234,11 +233,11 @@ export const Tasks = () => {
               <td>{t?.description}</td>
               <td>
                 <CiCalendar className="mb-1" />
-                {t?.starting_date}
+                {moment(t?.starting_date).format("DD/MM/YYYY")}
               </td>
               <td>
                 <CiCalendar className="mb-1" />
-                {t?.ending_date}
+                {moment(t?.ending_date).format("DD/MM/YYYY")}
               </td>
 
               <td>
@@ -270,6 +269,8 @@ export const Tasks = () => {
           ))}
         </tbody>
       </Table>
+
+      {/* Add Task Modal */}
       <ModalComponent
         modal={showModal}
         toggle={() => setShowModal(!showModal)}
@@ -316,7 +317,7 @@ export const Tasks = () => {
               invalid={invalidValues.project}
               value={taskQuery.project}
             >
-              <option value={""} >Project</option>
+              <option value={""}>Project</option>
               {projects.map((p) => (
                 <option key={p._id} value={p._id}>
                   {p.label}

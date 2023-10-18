@@ -10,6 +10,7 @@ export const NavigationBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [activeTab, setActiveTab] = useState(
     location.pathname === "/tasks" ? "tasks" : "projects"
   );
@@ -61,7 +62,7 @@ export const NavigationBar = () => {
   };
   return (
     <>
-      {/* <div className="title">Rubicon Coding Challenge</div> */}
+      <div className="title">Rubicon Coding Challenge</div>
       <Button
         onClick={() => tabClick("projects")}
         className={`${

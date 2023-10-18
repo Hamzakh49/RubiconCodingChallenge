@@ -12,8 +12,10 @@ export const tableSlice = createSlice({
       state.tableData.push(action.payload);
     },
     updateElement: (state, action) => {
-      const { _id, newData } = action.payload;
-      const index = state.tableData.findIndex((item) => item._id === _id);
+      const { newData } = action.payload;
+      const index = state.tableData.findIndex(
+        (item) => item._id === newData._id
+      );
       if (index !== -1) {
         state.tableData[index] = { ...state.tableData[index], ...newData };
       }
