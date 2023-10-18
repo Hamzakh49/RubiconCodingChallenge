@@ -1,8 +1,29 @@
-# React + Vite
+This README provides a step-by-step guide to set up the project.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Version
 
-Currently, two official plugins are available:
+I made the project using Node.js 18.15.0 and yarn v1.22.19
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
+
+Clone this repository or create a new one on your preferred version control platform.
+
+```bash
+git clone https://github.com/Hamzakh49/RubiconCodingChallenge.git
+```
+Access the project folder
+
+```bash
+cd RubiconDevChallenge
+cd RubiconFrontEnd
+````
+Install the packages and create node_modules
+
+```bash
+yarn
+````
+
+Run the project
+```bash
+yarn dev
+````
