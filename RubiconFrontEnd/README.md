@@ -14,7 +14,7 @@ git clone https://github.com/Hamzakh49/RubiconCodingChallenge.git
 Access the project folder
 
 ```bash
-cd RubiconDevChallenge
+cd RubiconCodingChallenge
 cd RubiconFrontEnd
 ````
 Install the packages and create node_modules
