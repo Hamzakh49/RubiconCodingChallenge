@@ -17,17 +17,18 @@ import {
   addElement,
   updateElement,
   deleteElement,
-  setTable,
-  emptyTable,
 } from "../redux/reducers/tableSlice";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 export const Projects = () => {
   const dispatch = useDispatch();
   const tableData = useSelector((state) => state.table.tableData);
+
   const [showModal, setShowModal] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
+
   const [projectQuery, setProjectQuery] = useState({});
   const [invalidValues, setInvalidValues] = useState({});
   const [loading, setLoading] = useState(false);
@@ -43,14 +44,6 @@ export const Projects = () => {
 
   const handleDeleteElement = (id) => {
     dispatch(deleteElement(id));
-  };
-
-  const handleSetTable = (data) => {
-    dispatch(setTable(data));
-  };
-
-  const handleEmptyTable = () => {
-    dispatch(emptyTable());
   };
 
   const verifyValues = () => {
@@ -87,9 +80,12 @@ export const Projects = () => {
       try {
         const res = await addProject(projectQuery);
         if (res.data.success) {
+          toast.success(res.data.message);
           setShowModal(false);
+          handleAddElement(res.data.data);
           setLoading(false);
         } else {
+          toast.error(res.data.message);
           setLoading(false);
         }
       } catch (err) {
@@ -115,7 +111,6 @@ export const Projects = () => {
       }
     } catch (err) {
       console.log(err);
-      setLoading(false);
     }
   };
   const updateProjectFunc = async (id) => {
@@ -124,10 +119,12 @@ export const Projects = () => {
       try {
         const res = await updateProject(id, projectQuery);
         if (res.data.success) {
+          toast.success(res.data.message);
           setShowModalEdit(false);
-          handleUpdateElement(projectQuery);
+          handleUpdateElement({ newData: projectQuery, _id: id });
           setLoading(false);
         } else {
+          toast.error(res.data.message);
           setLoading(false);
         }
       } catch (err) {
@@ -138,14 +135,18 @@ export const Projects = () => {
       setLoading(false);
     }
   };
+
   const deleteProjectFunc = async (id) => {
     setLoading(true);
     try {
       const res = await deleteProject(id);
       if (res.data.success) {
+        toast.success(res.data.message);
         setShowModalDelete(false);
+        handleDeleteElement(id);
         setLoading(false);
       } else {
+        toast.error(res.data.message);
         setLoading(false);
       }
     } catch (err) {
@@ -153,6 +154,7 @@ export const Projects = () => {
       setLoading(false);
     }
   };
+
   const changeQuery = (e) => {
     setInvalidValues({
       ...invalidValues,
@@ -188,11 +190,11 @@ export const Projects = () => {
           + New Project
         </Button>
       </div>
-      <Table className="table">
+      <Table className="table" responsive>
         <thead>
           <tr>
             <th>Label</th>
-            <th className="desc">Description</th>
+            <th>Description</th>
             <th>Started At</th>
             <th>Ended At</th>
             <th>Created At</th>
@@ -202,36 +204,36 @@ export const Projects = () => {
         </thead>
         <tbody>
           {tableData.map((t) => (
-            <tr key={t._id}>
-              <td>{t.label}</td>
-              <td>{t.description}</td>
+            <tr key={t?._id}>
+              <td>{t?.label}</td>
+              <td>{t?.description}</td>
               <td>
                 <CiCalendar className="mb-1" />
-                {t.starting_date}
+                {t?.starting_date}
               </td>
               <td>
                 <CiCalendar className="mb-1" />
-                {t.ending_date}
+                {t?.ending_date}
               </td>
               <td>
                 <div className="created">
-                  {moment(t.createdAt).format("DD/MM/YYYY")}
+                  {moment(t?.createdAt).format("DD/MM/YYYY")}
                 </div>
               </td>
               <td>
                 <div className="updated">
-                  {moment(t.updatedAt).format("DD/MM/YYYY")}
+                  {moment(t?.updatedAt).format("DD/MM/YYYY")}
                 </div>
               </td>
               <td>
                 <MdModeEdit
-                  onClick={() => handleEdit(t._id)}
+                  onClick={() => handleEdit(t?._id)}
                   size={20}
                   color={"#7e26d8"}
                   className="table-icon"
                 />
                 <MdDelete
-                  onClick={() => handleDelete(t._id)}
+                  onClick={() => handleDelete(t?._id)}
                   className="table-icon"
                   size={20}
                   color={"#7e26d8"}
@@ -241,6 +243,8 @@ export const Projects = () => {
           ))}
         </tbody>
       </Table>
+
+      {/* Add Project Modal */}
       <ModalComponent
         modal={showModal}
         toggle={() => setShowModal(!showModal)}
@@ -301,6 +305,7 @@ export const Projects = () => {
         </Form>
       </ModalComponent>
 
+      {/* Edit Button Modal */}
       <ModalComponent
         modal={showModalEdit}
         toggle={() => setShowModalEdit(!showModalEdit)}
@@ -365,6 +370,7 @@ export const Projects = () => {
         </Form>
       </ModalComponent>
 
+      {/* Delete Button Modal */}
       <ModalComponent
         modal={showModalDelete}
         toggle={() => setShowModalDelete(!showModalDelete)}
@@ -372,7 +378,7 @@ export const Projects = () => {
         onSubmit={() => deleteProjectFunc(projectID)}
         loading={loading}
       >
-        <div>Are you sure you want to delete this item?</div>
+        <div>Are you sure you want to delete this project?</div>
       </ModalComponent>
     </>
   );

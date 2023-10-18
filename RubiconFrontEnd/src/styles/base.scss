@@ -1,11 +1,13 @@
 #root {
   margin: 0 auto;
   padding: 2rem;
-  margin-left: 10rem;
-  margin-right: 10rem;
   margin-top: 5rem;
   margin-bottom: 5rem;
   background-color: #f7f9fa;
+  @media(min-width: $laptop-breakpoint){
+    margin-left: 10rem;
+    margin-right: 10rem;
+    }
 }
 body {
   background-color: #f7f9fa;
@@ -51,14 +53,20 @@ body {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;
+  width: 100%;
 }
 
 .table th {
+  overflow: auto; 
   background-color: #f7f9fa;
   color: #a2a0a0;
   border-style: none;
   font-size: 0.9rem;
   font-weight: 600;
+  white-space: nowrap; 
+}
+td{
+  white-space: nowrap; 
 }
 .table .created {
   background-color: #75b7ff;
@@ -68,14 +76,7 @@ body {
   font-size: 12px;
   padding: 3px;
 }
-// td {
-// text-align: center;
-// height: 100%;
-// margin-top: 5px;
-// }
-// .desc {
-//   width: 35%;
-// }
+
 .updated {
   background-color: #ffd6ab;
   border-radius: 6px;

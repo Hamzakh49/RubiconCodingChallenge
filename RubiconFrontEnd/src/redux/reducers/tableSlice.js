@@ -12,14 +12,18 @@ export const tableSlice = createSlice({
       state.tableData.push(action.payload);
     },
     updateElement: (state, action) => {
-      state.tableData = state.tableData.map((item) =>
-        item._id === action.payload._id ? action.payload : item
-      );
+      const { _id, newData } = action.payload;
+      const index = state.tableData.findIndex((item) => item._id === _id);
+      if (index !== -1) {
+        state.tableData[index] = { ...state.tableData[index], ...newData };
+      }
     },
     deleteElement: (state, action) => {
-      state.tableData = state.tableData.filter(
-        (item) => item.id !== action.payload
-      );
+      const id = action.payload;
+      const index = state.tableData.findIndex((item) => item._id === id);
+      if (index !== -1) {
+        state.tableData.splice(index, 1);
+      }
     },
     setTable: (state, action) => {
       state.tableData = action.payload;

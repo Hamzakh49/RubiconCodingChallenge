@@ -11,6 +11,7 @@ export function getProjects() {
     },
   });
 }
+
 export function getProject(id) {
   return axios.get(PROJECTS_URL + `/${id}`, {
     headers: {
@@ -19,14 +20,7 @@ export function getProject(id) {
     },
   });
 }
-export function deleteProject(id) {
-  return axios.delete(PROJECTS_URL + `/${id}`, {
-    headers: {
-      Accept: "application/json",
-      "-Type": "application/json",
-    },
-  });
-}
+
 export function addProject(query) {
   return axios.post(PROJECTS_URL, query, {
     headers: {
@@ -35,8 +29,18 @@ export function addProject(query) {
     },
   });
 }
+
 export function updateProject(id, query) {
   return axios.put(PROJECTS_URL + `/${id}`, query, {
+    headers: {
+      Accept: "application/json",
+      "-Type": "application/json",
+    },
+  });
+}
+
+export function deleteProject(id) {
+  return axios.delete(PROJECTS_URL + `/${id}`, {
     headers: {
       Accept: "application/json",
       "-Type": "application/json",

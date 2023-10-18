@@ -1,7 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { NavigationBar } from "./pages/NavigationBar";
+import { NavigationBar } from "./layouts/NavigationBar";
 import { Projects } from "./pages/Projects";
 import { Tasks } from "./pages/Tasks";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   return (
@@ -13,6 +16,7 @@ function App() {
             <Route path="/tasks" element={<Tasks />} />
           </Route>
         </Routes>
+        <ToastContainer />
       </Router>
     </>
   );
