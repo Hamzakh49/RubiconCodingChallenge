@@ -1,11 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "reactstrap";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setTable, emptyTable } from "../redux/reducers/tableSlice";
+import { getProjects } from "../api/projectsAPI";
+import { getTasks } from "../api/taskAPI";
 
 export const NavigationBar = () => {
+  const dispatch = useDispatch();
+  const tableData = useSelector((state) => state.table.tableData);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("projects");
+  // const [tableData, setTableData] = useState([]);
+
+  const handleSetTable = (data) => {
+    dispatch(setTable(data));
+  };
+  const handleEmptyTable = () => {
+    dispatch(emptyTable());
+  };
+
+  const getProjectsFunc = async () => {
+    try {
+      const res = await getProjects();
+      if (res.data.success) {
+        // settableData(res.data.data);
+        handleSetTable(res.data.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getTasksFunc = async () => {
+    try {
+      const res = await getTasks();
+      if (res.data.success) {
+        // settableData(res.data.data);
+        handleSetTable(res.data.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "projects") {
+      getProjectsFunc();
+    } else {
+      getTasksFunc();
+    }
+  }, [activeTab]);
 
   const tabClick = (tab) => {
     setActiveTab(tab);
@@ -15,6 +60,7 @@ export const NavigationBar = () => {
       navigate("/tasks");
     }
   };
+  console.log("tableData", tableData);
   return (
     <>
       {/* <div className="title">Rubicon Coding Challenge</div> */}
@@ -34,7 +80,7 @@ export const NavigationBar = () => {
       >
         Tasks
       </Button>
-      <Outlet/>
+      <Outlet />
     </>
   );
 };

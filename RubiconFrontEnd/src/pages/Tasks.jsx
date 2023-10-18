@@ -1,12 +1,117 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Table } from "reactstrap";
 import { CiCalendar } from "react-icons/ci";
 import { MdModeEdit, MdDelete } from "react-icons/md";
 import { ModalComponent } from "../components/ModalComponent";
-import { Form, FormGroup, Label, Input } from "reactstrap";
+import { Form, FormGroup, Label, Input, FormFeedback } from "reactstrap";
+import { AiFillFlag } from "react-icons/ai";
+import { getProjects } from "../api/projectsAPI";
+import { addTask } from "../api/taskAPI";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addElement,
+  updateElement,
+  deleteElement,
+  setTable,
+  emptyTable,
+} from "../redux/reducers/tableSlice";
+import moment from "moment";
 
 export const Tasks = () => {
+  const dispatch = useDispatch();
+  const tableData = useSelector((state) => state.table.tableData);
+
   const [showModal, setShowModal] = useState(false);
+  const [taskQuery, setTaskQuery] = useState({});
+  const [invalidValues, setInvalidValues] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [projects, setProjects] = useState([]);
+
+  const verifyValues = () => {
+    let invalid = false;
+    let newInvalidValues = {
+      label: false,
+      description: false,
+      project: false,
+      starting_date: false,
+      ending_date: false,
+    };
+    if (!taskQuery.label) {
+      newInvalidValues.label = true;
+      invalid = true;
+    }
+    if (!taskQuery.description) {
+      newInvalidValues.description = true;
+      invalid = true;
+    }
+    if (!taskQuery.project) {
+      newInvalidValues.project = true;
+      invalid = true;
+    }
+    if (!taskQuery.starting_date) {
+      newInvalidValues.starting_date = true;
+      invalid = true;
+    }
+    if (!taskQuery.ending_date) {
+      newInvalidValues.ending_date = true;
+      invalid = true;
+    }
+    setInvalidValues(newInvalidValues);
+    return invalid;
+  };
+
+  const addTaskFunc = async () => {
+    setLoading(true);
+    if (!verifyValues()) {
+      try {
+        const res = await addTask(taskQuery);
+        console.log(res);
+        if (res.data.success) {
+          setShowModal(false);
+          setLoading(false);
+        } else {
+          setLoading(false);
+        }
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const getProjectsFunc = async () => {
+    try {
+      const res = await getProjects();
+      if (res.data.success) {
+        setProjects(res.data.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const changeQuery = (e) => {
+    setInvalidValues({
+      ...invalidValues,
+      [e.target.name]: false,
+    });
+    setTaskQuery({
+      ...taskQuery,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  useEffect(() => {
+    getProjectsFunc();
+  }, []);
+
+  useEffect(() => {
+    setInvalidValues({});
+    setTaskQuery({});
+  }, [showModal]);
+
   return (
     <>
       <div className="new-display">
@@ -31,37 +136,36 @@ export const Tasks = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>
-              <CiCalendar className="mb-1" />
-              11/04/2023
-            </td>
-            <td>
-              <CiCalendar className="mb-1" />
-              11/04/2023
-            </td>
-            <td>
-              <div className="created">11/04/2023</div>
-            </td>
-            <td>
-              <div className="updated">11/04/2023</div>
-            </td>
-            <td>
-              <Input bsSize={"sm"} type="select">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </Input>
-            </td>
-            <td>
-              <MdModeEdit size={20} color={"#7e26d8"} />
-              <MdDelete size={20} color={"#7e26d8"} />
-            </td>
-          </tr>
+          {tableData.map((t) => (
+            <tr key={t._id}>
+              <td>{t.label}</td>
+              <td>{t.description}</td>
+              <td>
+                <CiCalendar className="mb-1" />
+                {t.starting_date}
+              </td>
+              <td>
+                <CiCalendar className="mb-1" />
+                {t.ending_date}
+              </td>
+
+              <td>
+                <div className="created">
+                  {moment(t.createdAt).format("DD/MM/YYYY")}
+                </div>
+              </td>
+              <td>
+                <div className="updated">
+                  {moment(t.updatedAt).format("DD/MM/YYYY")}
+                </div>
+              </td>
+              <td>{t.project}</td>
+              <td>
+                <MdModeEdit size={20} color={"#7e26d8"} />
+                <MdDelete size={20} color={"#7e26d8"} />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
       <ModalComponent
@@ -70,48 +174,78 @@ export const Tasks = () => {
         header={"Add new task"}
         smallheader={"Fill your task attributes"}
         submit={"Save"}
+        onSubmit={addTaskFunc}
+        loading={loading}
+        Icon={<AiFillFlag />}
       >
         <Form>
           <FormGroup>
-            <Label>Label*</Label>
-            <Input placeholder="Write a label..."></Input>
+            <Label for="label">Label*</Label>
+            <Input
+              id="label"
+              name="label"
+              placeholder="Write a label..."
+              onChange={(e) => changeQuery(e)}
+              invalid={invalidValues.label}
+              value={taskQuery.label}
+            />
+            <FormFeedback>Label is Required!</FormFeedback>
           </FormGroup>
           <FormGroup>
-            <Label for="exampleText">Description*</Label>
+            <Label for="description">Description*</Label>
             <Input
-              id="exampleText"
-              name="text"
+              id="description"
+              name="description"
               type="textarea"
               placeholder="Write a description..."
+              onChange={(e) => changeQuery(e)}
+              invalid={invalidValues.description}
+              value={taskQuery.description}
             />
+            <FormFeedback>Description is Required!</FormFeedback>
           </FormGroup>
           <FormGroup>
-            <Label for="exampleSelect">Project*</Label>
-            <Input id="exampleSelect" name="select" type="select">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
+            <Label for="project">Project*</Label>
+            <Input
+              id="project"
+              name="project"
+              type="select"
+              onChange={(e) => changeQuery(e)}
+              invalid={invalidValues.project}
+              value={taskQuery.project}
+            >
+              <option value={""}>Project</option>
+              {projects.map((p) => (
+                <option key={p._id} value={p._id}>
+                  {p.label}
+                </option>
+              ))}
             </Input>
+            <FormFeedback>Project is Required!</FormFeedback>
           </FormGroup>
           <FormGroup>
-            <Label for="exampleDate">Started at*</Label>
+            <Label for="starting_date">Started at*</Label>
             <Input
-              id="exampleDate"
-              name="date"
-              placeholder="date placeholder"
+              id="starting_date"
+              name="starting_date"
               type="date"
+              onChange={(e) => changeQuery(e)}
+              invalid={invalidValues.starting_date}
+              value={taskQuery.starting_date}
             />
+            <FormFeedback>Starting date is Required!</FormFeedback>
           </FormGroup>
           <FormGroup>
-            <Label for="exampleDate">Ended at*</Label>
+            <Label for="ending_date">Ended at*</Label>
             <Input
-              id="exampleDate"
-              name="date"
-              placeholder="date placeholder"
+              id="ending_date"
+              name="ending_date"
               type="date"
+              onChange={(e) => changeQuery(e)}
+              invalid={invalidValues.ending_date}
+              value={taskQuery.ending_date}
             />
+            <FormFeedback>Ending date is Required!</FormFeedback>
           </FormGroup>
         </Form>
       </ModalComponent>

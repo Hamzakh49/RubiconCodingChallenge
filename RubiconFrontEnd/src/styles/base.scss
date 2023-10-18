@@ -73,9 +73,9 @@ body {
 // height: 100%;
 // margin-top: 5px;
 // }
-.desc {
-  width: 35%;
-}
+// .desc {
+//   width: 35%;
+// }
 .updated {
   background-color: #ffd6ab;
   border-radius: 6px;
@@ -83,4 +83,8 @@ body {
   color: #cb963c;
   font-size: 12px;
   padding: 3px;
+}
+
+.table-icon {
+  cursor: pointer;
 }
