@@ -80,7 +80,6 @@ export const Tasks = () => {
     if (!verifyValues()) {
       try {
         const res = await addTask(taskQuery);
-        console.log(res);
         if (res.data.success) {
           toast.success(res.data.message);
           setShowModal(false);
